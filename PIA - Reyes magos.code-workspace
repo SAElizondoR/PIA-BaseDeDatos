@@ -1,12 +1,12 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"dataworkspace.projects": [
-			"PIA - Reyes magos.sqlproj"
-		]
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "dataworkspace.projects": [
+            "servidor/PIA - Reyes magos.sqlproj"
+        ]
+    }
 }
