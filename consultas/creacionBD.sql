@@ -10,12 +10,16 @@ CREATE TABLE vecino(
     id_grupo INT,
     PRIMARY KEY(dni_vecino),
     FOREIGN KEY(id_rey_mago) REFERENCES rey_mago(id_rey_mago),
-    FOREIGN KEY(id_grupo) REFERENCES grupo(id_grupo)
+    FOREIGN KEY(id_grupo) REFERENCES grupo(id_grupo),
+    CONSTRAINT revDni
+    CHECK(dni_vecino LIKE '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]'),
 );
 CREATE TABLE rey_mago(
     id_rey_mago INT NOT NULL,
     nombre_rey_mago VARCHAR(9),
-    PRIMARY KEY(id_rey_mago)
+    PRIMARY KEY(id_rey_mago),
+    CONSTRAINT revNombreReyMago
+    CHECK(nombre_rey_mago IN ('Melchor', 'Gaspar', 'Baltazar'))
 );
 CREATE TABLE grupo(
     id_grupo INT NOT NULL,
@@ -38,7 +42,8 @@ CREATE TABLE niño(
     FOREIGN KEY(id_rey_mago) REFERENCES rey_mago(id_rey_mago),
     FOREIGN KEY(id_regalo) REFERENCES regalo(id_regalo),
     FOREIGN KEY(id_barrio) REFERENCES barrio(id_barrio),
-    FOREIGN KEY(id_evento) REFERENCES evento(id_evento)
+    FOREIGN KEY(id_evento) REFERENCES evento(id_evento),
+    CONSTRAINT revCalleNiño CHECK(calle_numero LIKE '%[0-9]')
 );
 CREATE TABLE regalo(
     id_regalo INT NOT NULL,
@@ -69,7 +74,12 @@ CREATE TABLE evento(
     calle_numero VARCHAR(50),
     id_grupo INT NOT NULL,
     id_barrio INT NOT NULL,
-    PRIMARY KEY(id_evento)
+    PRIMARY KEY(id_evento),
+    FOREIGN KEY(id_grupo) REFERENCES grupo(id_grupo),
+    FOREIGN KEY(id_barrio) REFERENCES barrio(id_barrio),
+    CONSTRAINT mismaDireccion UNIQUE(fecha_hora, calle_numero, id_barrio),
+    CONSTRAINT mismaFecha UNIQUE(fecha_hora, id_grupo),
+    CONSTRAINT revCalleEvento CHECK(calle_numero LIKE '%[0-9]')
 );
 CREATE TABLE convence(
     id_convencido INT NOT NULL,
