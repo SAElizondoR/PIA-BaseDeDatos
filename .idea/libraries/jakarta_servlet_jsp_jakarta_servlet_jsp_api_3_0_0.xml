@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.0.0" type="repository">
+    <properties maven-id="jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.0.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/jakarta/servlet/jsp/jakarta.servlet.jsp-api/3.0.0/jakarta.servlet.jsp-api-3.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

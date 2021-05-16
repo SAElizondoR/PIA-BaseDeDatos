@@ -1,3 +1,4 @@
+<%--@elvariable id="tabla" type="java.lang.String"--%>
 <%--
   Created by IntelliJ IDEA.
   User: sergio
@@ -6,6 +7,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -27,7 +29,7 @@
             </a> -->
             <hr class="sidebar-divider my-0">
             <ul class="nav navbar-nav text-light" id="accordionSidebar">
-                <li class="nav-item"><a class="nav-link active" href="index.jsp"><i class="fas fa-tachometer-alt"></i><span>Índice</span></a></li>
+                <li class="nav-item"><a class="nav-link active" href="../index.jsp"><i class="fas fa-tachometer-alt"></i><span>Índice</span></a></li>
                 <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/Almacen?accion=IrBuscar><i class="fa fa-search"></i><span>Buscar</span></a></li>
                 <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/Almacen?accion=IrAgregar><i class="fa fa-angle-double-down"></i><span>Agregar</span></a></li>
             </ul>
@@ -47,7 +49,9 @@
                         <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><i class="fas fa-search"></i></a>
                             <div class="dropdown-menu dropdown-menu-right p-3 animated--grow-in" aria-labelledby="searchDropdown">
                                 <form class="form-inline mr-auto navbar-search w-100">
-                                    <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Buscar">
+                                    <div class="input-group">
+                                        <label for="busqueda">Buscar</label>
+                                        <input id="busqueda" class="bg-light form-control border-0 small" type="text" placeholder="Buscar">
                                         <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
                                     </div>
                                 </form>
@@ -59,10 +63,10 @@
                             </div>
                         </li>
 
-                        <div class="d-none d-sm-block topbar-divider"></div>
+                        <!-- <div class="d-none d-sm-block topbar-divider"></div>
                         <li class="nav-item dropdown no-arrow">
 
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
             </nav>
@@ -133,45 +137,86 @@
                         </div>
                     </div>
                 </div> -->
-                <label for="tabla">Escoja la tabla a mostrar</label>
-                <select id="tabla" name="tabla">
-                    <option disabled selected value>Seleccione una opción</option>
-                    <option value="barrio">Barrios</option>
-                    <option value="vecino">Vecinos</option>
-                    <option value="evento">Eventos</option>
-                    <option value="nino">Niños</option>
-                </select>
+                <form action="${pageContext.request.contextPath}/ReyesMagosServlet" method="get">
+                    <label for="tabla">Escoja la tabla a mostrar</label>
+                    <select id="tabla" name="tabla">
+                        <option disabled ${tabla == 'ninguno' ? 'selected="selected"' : ''}>Seleccione una opción</option>
+                        <option value="barrio" ${tabla == 'barrio' ? 'selected="selected"' : ''}>Barrios</option>
+                        <option value="vecino" ${tabla == 'vecino' ? 'selected="selected"' : ''}>Vecinos</option>
+                        <option value="evento" ${tabla == 'evento' ? 'selected="selected"' : ''}>Eventos</option>
+                        <option value="nino" ${tabla == 'nino' ? 'selected="selected"' : ''}>Niños</option>
+                    </select>
+                    <p>
+                        <input type="submit" name="seleccionar" value="seleccionar"/>
+                    </p>
+                </form>
                 <div class="row">
                     <div class="col">
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <%--@elvariable id="atributosLista" type="java.util.List"--%>
+                                    <c:forEach items="${atributosLista}" var="atributo">
+                                        <th>${atributo}</th>
+                                    </c:forEach>
+                                    <!-- <th>Id</th>
                                     <th>Nombre</th>
                                     <th>Categoría</th>
                                     <th>Marca</th>
                                     <th>Dimensión</th>
                                     <th>Unidades</th>
-                                    <th></th>
+                                    <th></th> -->
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${vectorlista}" var="herramienta">
-                                    <tr>
-                                        <td><c:out value="${herramienta.id}"/></td>
-                                        <td><c:out value="${herramienta.nombre}"/></td>
-                                        <td><c:out value="${herramienta.categoria}"/></td>
-                                        <td><c:out value="${herramienta.marca}"/></td>
-                                        <td><c:out value="${herramienta.tamano}"/></td>
-                                        <td><c:out value="${herramienta.unidades}"/></td>
-                                        <td>
-                                            <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
-                                            |
-                                            <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
+                                <%--@elvariable id="lista" type="java.util.List"--%>
+                                <c:if test="${tabla == 'barrio'}">
+                                    <c:forEach items="${lista}" var="elemento">
+                                        <tr>
+                                            <td><c:out value="${elemento.nombre_barrio}"/></td>
+                                            <td><c:out value="${elemento.nombre_municipio}"/></td>
+                                            <td><c:out value="${elemento.nombre_comunidad_autonoma}"/></td>
+                                            <td>
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                |
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${tabla == 'vecino'}">
+                                    <c:forEach items="${lista}" var="elemento">
+                                        <tr>
+                                            <td><c:out value="${elemento.dni_vecino}"/></td>
+                                            <td><c:out value="${elemento.nombre_vecino}"/></td>
+                                            <td><c:out value="${elemento.rey_mago}"/></td>
+                                            <td><c:out value="${elemento.id_grupo}"/></td>
+                                            <td>
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                |
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${tabla == 'evento'}">
+                                    <c:forEach items="${lista}" var="elemento">
+                                        <tr>
+                                            <td><c:out value="${elemento.fecha_hora}"/></td>
+                                            <td><c:out value="${elemento.calle_numero}"/></td>
+                                            <td><c:out value="${elemento.id_grupo}"/></td>
+                                            <td><c:out value="${elemento.nombre_barrio}"/></td>
+                                            <td><c:out value="${elemento.nombre_municipio}"/></td>
+                                            <td>
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                |
+                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
+
                                 </tbody>
                             </table>
                         </div>
@@ -181,7 +226,7 @@
         </div>
         <footer class="bg-white sticky-footer">
             <div class="container my-auto">
-                <div class="text-center my-auto copyright"><span>Página diseñada por David Lázaro, Héctor Márquez y Sergio Elizondo</span></div>
+                <div class="text-center my-auto copyright"><span>Página diseñada por Sergio Andrés y Diego Rangel Pardo</span></div>
             </div>
         </footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
