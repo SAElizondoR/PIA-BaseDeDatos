@@ -1,4 +1,4 @@
-/*INSERT INTO rey_mago(nombre_rey_mago)
+INSERT INTO rey_mago(nombre_rey_mago)
 VALUES ('Melchor'), ('Gaspar'), ('Baltazar');
 INSERT INTO comunidad_autonoma(nombre_comunidad_autonoma)
 VALUES ('Madrid'), ('País Vasco'), ('Andalucía'), ('Aragón');
@@ -33,4 +33,4 @@ INSERT INTO convence(id_convencido, id_quien_convence)
 VALUES ('36863952H', '12345678A'),
 ('45678753Y', '12345678A'),
 ('92746584F', '36863952H'),
-('95826496K', '92746584F');*/
+('95826496K', '92746584F');

@@ -12,7 +12,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Registro de herramienta</title>
+    <title>Agregar</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/fonts/fontawesome-all.min.css">
@@ -26,15 +26,15 @@
 <div id="wrapper">
     <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0" style="background: rgb(24,22,22);">
         <div class="container-fluid d-flex flex-column p-0">
-            <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+            <!--<a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                 <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-toolbox"></i></div>
                 <div class="sidebar-brand-text mx-3"><span>toolbox</span></div>
-            </a>
+            </a>-->
             <hr class="sidebar-divider my-0">
             <ul class="nav navbar-nav text-light" id="accordionSidebar">
                 <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/ReyesMagosServlet"><i class="fas fa-tachometer-alt"></i><span>Índice</span></a></li>
                 <!-- <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/Almacen?accion=IrBuscar><i class="fa fa-search"></i><span>Buscar</span></a></li> -->
-                <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=agregar><i class="fa fa-angle-double-down"></i><span>Agregar herramientas</span></a></li>
+                <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=agregar><i class="fa fa-angle-double-down"></i><span>Agregar</span></a></li>
             </ul>
             <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
         </div>
@@ -110,13 +110,13 @@
                                         <option value="${mun.id_municipio}">${mun.nombre_municipio}</option>
                                     </c:forEach>
                                 </select>
-                                <label for="comunidad">Comunidad autónoma</label>
+                                <!--<label for="comunidad">Comunidad autónoma</label>
                                 <select class="form-control" id="comunidad" name="comunidad">
                                     <%--@elvariable id="listaComunidades" type="java.util.List"--%>
-                                <c:forEach items="${listaComunidades}" var="com">
-                                    <option value="${com.id_comunidad_autonoma}">${com.nombre_comunidad_autonoma}</option>
-                                </c:forEach>
-                            </select>
+                                c:forEach items="$listaComunidades}" var="com">
+                                    <option value="$com.id_comunidad_autonoma}">$com.nombre_comunidad_autonoma}</option>
+                                /c:forEach>
+                            </select>-->
                                 <br>
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-block" name="accion" value="agregarBDbarrio" type="submit" style="background: rgb(95,82,245);">Agregar</button>
@@ -153,6 +153,32 @@
                                 <br>
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-block" name="accion" value="agregarBDvecino" type="submit" style="background: rgb(95,82,245);">Agregar</button>
+                                </div>
+                            </c:if>
+                            <c:if test="${tabla == 'evento'}">
+                                <label for="fecha_hora">Fecha y hora. Ej.: 2021-06-08 12:35:29</label>
+                                <input class="form-control" type="datetime-local" style="margin: 0 0 10px;" id="fecha_hora" name="fecha_hora">
+                                <label for="calle">Calle</label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="calle" name="calle">
+                                <label for="numero">Número</label>
+                                <input class="form-control" type="number" style="margin: 0 0 10px;" id="numero" name="numero">
+                                <label for="id_grupo">Grupo</label>
+                                <select class="form-control" id="id_grupo" name="id_grupo">
+                                        <%--@elvariable id="listaGrupos" type="java.util.List"--%>
+                                    <c:forEach items="${listaGrupos}" var="grup">
+                                        <option value="${grup.id_grupo}">${grup.id_grupo}</option>
+                                    </c:forEach>
+                                </select>
+                                <label for="id_barrio">Barrio</label>
+                                <select class="form-control" id="id_barrio" name="id_barrio">
+                                        <%--@elvariable id="listaBarrios" type="java.util.List"--%>
+                                    <c:forEach items="${listaBarrios}" var="bar">
+                                        <option value="${bar.id_barrio}">${bar.nombre_barrio}</option>
+                                    </c:forEach>
+                                </select>
+                                <br>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" name="accion" value="agregarBDevento" type="submit" style="background: rgb(95,82,245);">Agregar</button>
                                 </div>
                             </c:if>
                         </form>

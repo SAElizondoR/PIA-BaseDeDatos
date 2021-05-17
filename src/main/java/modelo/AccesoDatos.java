@@ -3,8 +3,11 @@ package modelo;
 import bd.utiles.ConexionBD;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class AccesoDatos {
@@ -97,16 +100,15 @@ public class AccesoDatos {
         }
     }
 
-    public void editarBarrio(int id_barrio, String nombre_barrio, int id_municipio) {
+    public void editarBarrio(int id_barrio, String nombre_barrio) {
         ConexionBD con = new ConexionBD();
         Connection cnxObtenida = con.crearConexion();
         String consulta = "UPDATE barrio " +
-                "SET nombre_barrio = ?, id_municipio = ? " +
+                "SET nombre_barrio = ? " +
                 "WHERE id_barrio = ?";
         try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
             sta.setString(1, nombre_barrio);
-            sta.setInt(2, id_municipio);
-            sta.setInt(3, id_barrio);
+            sta.setInt(2, id_barrio);
             sta.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -382,6 +384,7 @@ public class AccesoDatos {
             ResultSet res = dec.executeQuery(consulta);
             while (res.next()) {
                 Evento evento = new Evento();
+                evento.setId_evento(res.getInt("id_evento"));
                 evento.setFecha_hora(res.getString("fecha_hora"));
                 evento.setCalle_numero(res.getString("calle_numero"));
                 evento.setId_grupo(res.getInt("id_grupo"));
@@ -439,12 +442,23 @@ public class AccesoDatos {
     }
 
     public void agregarEvento(String fecha_hora, String calle_numero, int id_grupo, int id_barrio) {
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+        Date fecha = null;
+        try {
+            fecha = format1.parse(fecha_hora);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String fechaString = format.format(fecha);
+
         ConexionBD con = new ConexionBD();
         Connection cnxObtenida = con.crearConexion();
         String consulta = "INSERT INTO evento(fecha_hora, calle_numero, id_grupo, id_barrio) " +
                 "VALUES(?,?,?,?)";
         try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
-            sta.setString(1, fecha_hora);
+            sta.setString(1, fechaString);
             sta.setString(2, calle_numero);
             sta.setInt(3, id_grupo);
             sta.setInt(4, id_barrio);
@@ -460,6 +474,39 @@ public class AccesoDatos {
                 throwables.printStackTrace();
             }
         }
+    }
+
+    public void editarEvento(int id_evento, String fecha_hora) {
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+        try {
+            // System.out.println(fecha_hora);
+            Date fecha = format1.parse(fecha_hora);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String fechaString = format.format(fecha);
+            ConexionBD con = new ConexionBD();
+            Connection cnxObtenida = con.crearConexion();
+            String consulta = "UPDATE evento " +
+                    "SET fecha_hora = ? " +
+                    "WHERE id_evento = ?";
+            try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+                sta.setString(1, fechaString);
+                sta.setInt(2, id_evento);
+                sta.executeUpdate();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            finally {
+                try {
+                    if(!cnxObtenida.isClosed())
+                        cnxObtenida.close();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void borrarEvento(int id) {

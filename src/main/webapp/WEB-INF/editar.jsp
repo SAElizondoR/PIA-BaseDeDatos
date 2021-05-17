@@ -75,7 +75,7 @@
                     <div class="col" style="background: #ffffff;border-radius: 14px;box-shadow: 0 0 8px;">
                         <form action="ReyesMagosServlet" method="post">
                             <h2 class="sr-only">Login Form</h2>
-                            <div class="illustration" style="margin: 0;"><i class="la la-edit" style="font-size: 107px;color: rgb(24,22,22);display: inline-block;width: 100%;text-align: center;"></i></div>
+                            <!--<div class="illustration" style="margin: 0;"><i class="la la-edit" style="font-size: 107px;color: rgb(24,22,22);display: inline-block;width: 100%;text-align: center;"></i></div>-->
                             <div class="form-group">
                                 <div class="input-group">
                                     <div class="input-group-prepend"></div>
@@ -83,6 +83,15 @@
                                 </div>
                             </div>
                             <%--@elvariable id="tabla" type="java.lang.String"--%>
+                            <c:if test="${tabla == 'barrio'}"><%--@elvariable id="barrio" type="modelo.Barrio"--%>
+                                <input type="hidden" name="id" value=${barrio.id_barrio}>
+                                <label for="nombre_barrio">Nombre del barrio</label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="nombre_barrio" name="nombre_barrio" placeholder="${barrio.nombre_barrio}">
+                                <br>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" name="accion" value="editarBDbarrio" type="submit" style="background: rgb(95,82,245);">Editar</button>
+                                </div>
+                            </c:if>
                             <c:if test="${tabla == 'vecino'}"><%--@elvariable id="vecino" type="modelo.Vecino"--%>
                                 <input type="hidden" name="id" value=${vecino.dni_vecino}>
                                 <label for="nombre_vecino">Nombre(s)</label>
@@ -106,6 +115,15 @@
                                 <br>
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-block" name="accion" value="editarBDvecino" type="submit" style="background: rgb(95,82,245);">Editar</button>
+                                </div>
+                            </c:if>
+                            <c:if test="${tabla == 'evento'}"><%--@elvariable id="evento" type="modelo.Evento"--%>
+                                <input type="hidden" name="id" value=${evento.id_evento}>
+                                <label for="fecha_hora">Fecha y hora. Ej.: 2021-06-08 12:35:29</label>
+                                <input class="form-control" type="datetime-local" style="margin: 0 0 10px;" id="fecha_hora" name="fecha_hora" placeholder="${evento.fecha_hora}">
+                                <br>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" name="accion" value="editarBDevento" type="submit" style="background: rgb(95,82,245);">Editar</button>
                                 </div>
                             </c:if>
                         </form>

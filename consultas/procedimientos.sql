@@ -1,4 +1,4 @@
-/*CREATE FUNCTION contar_vecinos(@ID_GRUPO INT)
+CREATE FUNCTION contar_vecinos(@ID_GRUPO INT)
 RETURNS INT
 AS
 BEGIN
@@ -17,7 +17,7 @@ SET NOCOUNT ON
 UPDATE grupo
 SET numero_integrantes_grupo = dbo.contar_vecinos(id_grupo)
 END
-GO*/
+GO
 CREATE PROCEDURE BorrarFilaEvento @id INT
 AS
 DELETE FROM evento
