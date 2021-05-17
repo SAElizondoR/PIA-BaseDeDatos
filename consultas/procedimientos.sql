@@ -1,4 +1,4 @@
-CREATE FUNCTION contar_vecinos(@ID_GRUPO INT)
+/*CREATE FUNCTION contar_vecinos(@ID_GRUPO INT)
 RETURNS INT
 AS
 BEGIN
@@ -8,13 +8,18 @@ BEGIN
     WHERE id_grupo = @ID_GRUPO
     RETURN(@CONTADOR);
 END;
-/* GO
+GO
 CREATE TRIGGER agregar_vecino ON vecino
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
 SET NOCOUNT ON
 UPDATE grupo
-SET grupo.numero_integrantes_grupo = contar_vecinos(id_grupo)
-WHERE grupo.id_grupo = id_grupo;
-END */
+SET numero_integrantes_grupo = dbo.contar_vecinos(id_grupo)
+END
+GO*/
+CREATE PROCEDURE BorrarFilaEvento @id INT
+AS
+DELETE FROM evento
+WHERE id_evento = @id
+GO

@@ -31,17 +31,41 @@ public class ReyesMagosServlet extends HttpServlet {
 
     public void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
-        tabla = request.getParameter("tabla");
-        if (tabla == null)
-            tabla = "ninguno";
-        mostrarTabla(request, response);
-
-        /* RequestDispatcher desp = request.getRequestDispatcher("/WEB-INF/listar.jsp");
-        try {
-            desp.forward(request, response);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-        } */
+        String accion = request.getParameter("accion");
+        if (request.getParameter("btnagregar") != null)
+            accion = "agregar";
+        if (accion == null)
+            accion = "listar";
+        switch (accion) {
+            case "agregar":
+                irAgregarAlgo(request, response);
+                break;
+            case "editar":
+                obtenerUno(request, response);
+                break;
+            case "eliminar":
+                borrarAlgo(request, response);
+                break;
+            case "agregarBDbarrio":
+                tabla = "barrio";
+                agregarAlgo(request, response);
+                break;
+            case "agregarBDvecino":
+                tabla = "vecino";
+                agregarAlgo(request, response);
+                break;
+            case "editarBDvecino":
+                tabla = "vecino";
+                editarAlgo(request, response);
+                break;
+            case "borrarBDvecino":
+                break;
+            default:
+                tabla = request.getParameter("tabla");
+                if (tabla == null)
+                    tabla = "ninguno";
+                mostrarTabla(request, response);
+        }
     }
 
     public void mostrarTabla(HttpServletRequest request, HttpServletResponse response) {
@@ -76,6 +100,110 @@ public class ReyesMagosServlet extends HttpServlet {
         } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void irAgregarAlgo(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("tabla", tabla);
+        switch (tabla) {
+            case "barrio":
+                request.setAttribute("listaMunicipios", ad.listarMunicipios());
+                request.setAttribute("listaComunidades", ad.listarComunidadesAutonomas());
+                break;
+            case "vecino":
+                request.setAttribute("listaGrupos", ad.listarGrupos());
+                break;
+            default:
+        }
+
+        RequestDispatcher desp = request.getRequestDispatcher("/WEB-INF/agregar.jsp");
+        try {
+            desp.forward(request, response);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void agregarAlgo(HttpServletRequest request, HttpServletResponse response) {
+        switch (tabla) {
+            case "barrio":
+                String nombre_barrio = request.getParameter("nombre_barrio");
+                int id_municipio = Integer.parseInt(request.getParameter("municipio"));
+                ad.agregarBarrio(nombre_barrio, id_municipio);
+                break;
+            case "vecino":
+                String dni_vecino = request.getParameter("dni_vecino_num") + request.getParameter("dni_vecino_let");
+                String nombre_vecino = request.getParameter("nombre_vecino");
+                String paterno_vecino = request.getParameter("paterno_vecino");
+                String materno_vecino = request.getParameter("materno_vecino");
+                int id_rey_mago = Integer.parseInt(request.getParameter("rey_mago"));
+                int id_grupo = Integer.parseInt(request.getParameter("id_grupo"));
+                ad.agregarVecino(dni_vecino, nombre_vecino, paterno_vecino, materno_vecino, id_rey_mago, id_grupo);
+                break;
+            case "evento":
+                break;
+            case "nino":
+                break;
+            default:
+        }
+        mostrarTabla(request, response);
+    }
+
+    public void obtenerUno(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("tabla", tabla);
+        switch (tabla) {
+            case "barrio":
+                break;
+            case "vecino":
+                String id = request.getParameter("id");
+                request.setAttribute("listaGrupos", ad.listarGrupos());
+                request.setAttribute("vecino", ad.obtenerVecino(id));
+                break;
+            default:
+        }
+        RequestDispatcher desp = request.getRequestDispatcher("/WEB-INF/editar.jsp");
+        try {
+            desp.forward(request, response);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editarAlgo(HttpServletRequest request, HttpServletResponse response) {
+        switch (tabla) {
+            case "barrio":
+                break;
+            case "vecino":
+                String nombre_vecino = request.getParameter("nombre_vecino");
+                String paterno_vecino = request.getParameter("paterno_vecino");
+                String materno_vecino = request.getParameter("materno_vecino");
+                int id_rey_mago = Integer.parseInt(request.getParameter("rey_mago"));
+                int id_grupo = Integer.parseInt(request.getParameter("id_grupo"));
+                ad.editarVecino(request.getParameter("id"), nombre_vecino, paterno_vecino, materno_vecino, id_rey_mago, id_grupo);
+                break;
+            case "evento":
+                break;
+            case "nino":
+                break;
+            default:
+        }
+        mostrarTabla(request, response);
+    }
+
+    public void borrarAlgo(HttpServletRequest request, HttpServletResponse response) {
+        switch (tabla) {
+            case "barrio":
+                break;
+            case "vecino":
+                String dni_vecino = request.getParameter("dni_vecino");
+                ad.borrarVecino(dni_vecino);
+                break;
+            case "evento":
+                break;
+            case "nino":
+                break;
+            default:
+        }
+        mostrarTabla(request, response);
     }
 
     public void destroy() {

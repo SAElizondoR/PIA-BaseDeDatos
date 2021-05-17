@@ -5,6 +5,7 @@ public class Barrio {
     private String nombre_barrio;
     private String nombre_municipio;
     private String nombre_comunidad_autonoma;
+    private int id_municipio;
 
     public int getId_barrio() {
         return id_barrio;
@@ -36,5 +37,13 @@ public class Barrio {
 
     public void setNombre_comunidad_autonoma(String nombre_comunidad_autonoma) {
         this.nombre_comunidad_autonoma = nombre_comunidad_autonoma;
+    }
+
+    public int getId_municipio() {
+        return id_municipio;
+    }
+
+    public void setId_municipio(int id_municipio) {
+        this.id_municipio = id_municipio;
     }
 }

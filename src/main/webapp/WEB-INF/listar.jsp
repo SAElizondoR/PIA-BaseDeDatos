@@ -13,11 +13,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Reyes Magos Sin Fronteras</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/fonts/fontawesome5-overrides.min.css">
 </head>
 <body id="page-top">
 <div id="wrapper">
@@ -29,9 +29,9 @@
             </a> -->
             <hr class="sidebar-divider my-0">
             <ul class="nav navbar-nav text-light" id="accordionSidebar">
-                <li class="nav-item"><a class="nav-link active" href="../index.jsp"><i class="fas fa-tachometer-alt"></i><span>Índice</span></a></li>
-                <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/Almacen?accion=IrBuscar><i class="fa fa-search"></i><span>Buscar</span></a></li>
-                <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/Almacen?accion=IrAgregar><i class="fa fa-angle-double-down"></i><span>Agregar</span></a></li>
+                <li class="nav-item"><a class="nav-link active" href="${pageContext.request.contextPath}/ReyesMagosServlet"><i class="fas fa-tachometer-alt"></i><span>Índice</span></a></li>
+                <!--<li class="nav-item"><a class="nav-link" href=$pageContext.request.contextPath}/Almacen?accion=IrBuscar><i class="fa fa-search"></i><span>Buscar</span></a></li>-->
+                <li class="nav-item"><a class="nav-link" href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=agregar><i class="fa fa-angle-double-down"></i><span>Agregar</span></a></li>
             </ul>
             <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
         </div>
@@ -147,7 +147,7 @@
                         <option value="nino" ${tabla == 'nino' ? 'selected="selected"' : ''}>Niños</option>
                     </select>
                     <p>
-                        <input type="submit" name="seleccionar" value="seleccionar"/>
+                        <input type="submit" name="accion" value="listar"/>
                     </p>
                 </form>
                 <div class="row">
@@ -178,9 +178,9 @@
                                             <td><c:out value="${elemento.nombre_municipio}"/></td>
                                             <td><c:out value="${elemento.nombre_comunidad_autonoma}"/></td>
                                             <td>
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=editar&id=${elemento.id_barrio}>Editar</a>
                                                 |
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=eliminar&id=${elemento.id_barrio}>Eliminar</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -193,9 +193,9 @@
                                             <td><c:out value="${elemento.rey_mago}"/></td>
                                             <td><c:out value="${elemento.id_grupo}"/></td>
                                             <td>
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=editar&id=${elemento.dni_vecino}>Editar</a>
                                                 |
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=eliminar&id=${elemento.dni_vecino}>Eliminar</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -209,9 +209,9 @@
                                             <td><c:out value="${elemento.nombre_barrio}"/></td>
                                             <td><c:out value="${elemento.nombre_municipio}"/></td>
                                             <td>
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=ObtenerUno&id=${herramienta.id}>Editar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=editar&id=${elemento.id_evento}>Editar</a>
                                                 |
-                                                <a href=${pageContext.request.contextPath}/Almacen?accion=Eliminar&id=${herramienta.id}>Eliminar</a>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=eliminar&id=${elemento.id_evento}>Eliminar</a>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -230,9 +230,9 @@
             </div>
         </footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/jquery.min.js"></script>
+<script src="${pageContext.request.contextPath}/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-<script src="assets/js/theme.js"></script>
+<script src="${pageContext.request.contextPath}/assets/js/theme.js"></script>
 </body>
 </html>

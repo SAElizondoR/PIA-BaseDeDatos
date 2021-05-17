@@ -2,10 +2,7 @@ package modelo;
 
 import bd.utiles.ConexionBD;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,9 +15,9 @@ public class AccesoDatos {
         String consulta = "SELECT id_barrio, nombre_barrio, nombre_municipio, nombre_comunidad_autonoma " +
                 "FROM barrio " +
                 "INNER JOIN municipio " +
-                "ON(barrio.id_barrio = municipio.id_municipio) " +
+                "ON(barrio.id_municipio = municipio.id_municipio) " +
                 "INNER JOIN comunidad_autonoma " +
-                "ON(barrio.id_comunidad_autonoma = comunidad_autonoma.id_comunidad_autonoma)";
+                "ON(municipio.id_comunidad_autonoma = comunidad_autonoma.id_comunidad_autonoma)";
         try(Statement dec = cnxObtenida.createStatement()) {
             ResultSet res = dec.executeQuery(consulta);
             while (res.next()) {
@@ -45,8 +42,189 @@ public class AccesoDatos {
         return lista;
     }
 
+    public Barrio obtenerBarrio(int id) {
+        Barrio barrio = new Barrio();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT id_barrio, nombre_barrio, id_municipio " +
+                "FROM barrio " +
+                "WHERE id_barrio = ?";
+        try(PreparedStatement dec = cnxObtenida.prepareStatement(consulta)) {
+            dec.setInt(1, id);
+            ResultSet res = dec.executeQuery();
+            res.next();
+            barrio.setId_barrio(id);
+            barrio.setNombre_barrio(res.getString("nombre_barrio"));
+            barrio.setId_municipio(res.getInt("id_municipio"));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return barrio;
+    }
+
+
     public List<String> obtenerAtributosBarrio() {
         return Arrays.asList("Barrio", "Municipio", "Comunidad autónoma");
+    }
+
+    public void agregarBarrio(String nombre_barrio, int id_municipio) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "INSERT INTO barrio(nombre_barrio, id_municipio) " +
+                "VALUES(?,?)";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, nombre_barrio);
+            sta.setInt(2, id_municipio);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void editarBarrio(int id_barrio, String nombre_barrio, int id_municipio) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "UPDATE barrio " +
+                "SET nombre_barrio = ?, id_municipio = ? " +
+                "WHERE id_barrio = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, nombre_barrio);
+            sta.setInt(2, id_municipio);
+            sta.setInt(3, id_barrio);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void borrarBarrio(int id) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "DELETE FROM barrio " +
+                "WHERE id_barrio = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setInt(1, id);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public List<Municipio> listarMunicipios() {
+        List<Municipio> lista = new ArrayList<>();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT id_municipio, nombre_municipio " +
+                "FROM municipio";
+        try(Statement dec = cnxObtenida.createStatement()) {
+            ResultSet res = dec.executeQuery(consulta);
+            while (res.next()) {
+                Municipio mun = new Municipio();
+                mun.setId_municipio(res.getInt("id_municipio"));
+                mun.setNombre_municipio(res.getString("nombre_municipio"));
+                lista.add(mun);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return lista;
+    }
+
+    public List<ComunidadAutonoma> listarComunidadesAutonomas() {
+        List<ComunidadAutonoma> lista = new ArrayList<>();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT id_comunidad_autonoma, nombre_comunidad_autonoma " +
+                "FROM comunidad_autonoma";
+        try(Statement dec = cnxObtenida.createStatement()) {
+            ResultSet res = dec.executeQuery(consulta);
+            while (res.next()) {
+                ComunidadAutonoma com = new ComunidadAutonoma();
+                com.setId_comunidad_autonoma(res.getInt("id_comunidad_autonoma"));
+                com.setNombre_comunidad_autonoma(res.getString("nombre_comunidad_autonoma"));
+                lista.add(com);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return lista;
+    }
+
+    public List<Grupo> listarGrupos() {
+        List<Grupo> lista = new ArrayList<>();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT id_grupo, numero_integrantes_grupo, id_barrio " +
+                "FROM grupo";
+        try(Statement dec = cnxObtenida.createStatement()) {
+            ResultSet res = dec.executeQuery(consulta);
+            while (res.next()) {
+                Grupo grupo = new Grupo();
+                grupo.setId_grupo(res.getInt("id_grupo"));
+                grupo.setNumero_integrantes_grupo(res.getInt("numero_integrantes_grupo"));
+                grupo.setId_barrio(res.getInt("id_barrio"));
+                lista.add(grupo);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return lista;
     }
 
     public List<Vecino> listarVecinos() {
@@ -85,8 +263,114 @@ public class AccesoDatos {
         return lista;
     }
 
+    public Vecino obtenerVecino(String id) {
+        Vecino vecino = new Vecino();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT dni_vecino, nombre_vecino, apellido_paterno_vecino, apellido_materno_vecino, " +
+                "id_rey_mago, id_grupo " +
+                "FROM vecino " +
+                "WHERE dni_vecino = ?";
+        try(PreparedStatement dec = cnxObtenida.prepareStatement(consulta)) {
+            dec.setString(1, id);
+            ResultSet res = dec.executeQuery();
+            res.next();
+            vecino.setDni_vecino(res.getString("dni_vecino"));
+            vecino.setNombre_vecino(res.getString("nombre_vecino"));
+            vecino.setApellido_paterno_vecino(res.getString("apellido_paterno_vecino"));
+            vecino.setApellido_materno_vecino(res.getString("apellido_materno_vecino"));
+            vecino.setId_rey_mago(res.getInt("id_rey_mago"));
+            vecino.setId_grupo(res.getInt("id_grupo"));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return vecino;
+    }
+
     public List<String> obtenerAtributosVecino() {
         return Arrays.asList("DNI", "Nombre", "Rey mago al que representa", "ID del grupo");
+    }
+
+    public void agregarVecino(String dni_vecino, String nombre, String apellido_pat, String apellido_mat, int id_rey_mago, int id_grupo) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "INSERT INTO vecino(dni_vecino, nombre_vecino, apellido_paterno_vecino, apellido_materno_vecino, id_rey_mago, id_grupo) " +
+                "VALUES(?,?,?,?,?,?)";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, dni_vecino);
+            sta.setString(2, nombre);
+            sta.setString(3, apellido_pat);
+            sta.setString(4, apellido_mat);
+            sta.setInt(5, id_rey_mago);
+            sta.setInt(6, id_grupo);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void editarVecino(String dni_vecino, String nombre, String apellido_pat, String apellido_mat, int id_rey_mago, int id_grupo) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "UPDATE vecino " +
+                "SET nombre_vecino = ?, apellido_paterno_vecino = ?, apellido_materno_vecino = ?, id_rey_mago = ?, id_grupo = ? " +
+                "WHERE dni_vecino = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, nombre);
+            sta.setString(2, apellido_pat);
+            sta.setString(3, apellido_mat);
+            sta.setInt(4, id_rey_mago);
+            sta.setInt(5, id_grupo);
+            sta.setString(6, dni_vecino);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void borrarVecino(String id) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "DELETE FROM vecino " +
+                "WHERE dni_vecino = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, id);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 
     public List<Evento> listarEventos() {
@@ -119,7 +403,81 @@ public class AccesoDatos {
         return lista;
     }
 
+    public Evento obtenerEvento(int id) {
+        Evento evento = new Evento();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT * " +
+                "FROM eventos_programados " +
+                "WHERE id_evento = ?";
+        try(PreparedStatement dec = cnxObtenida.prepareStatement(consulta)) {
+            dec.setInt(1, id);
+            ResultSet res = dec.executeQuery();
+            res.next();
+            evento.setId_evento(id);
+            evento.setFecha_hora(res.getString("fecha_hora"));
+            evento.setCalle_numero(res.getString("calle_numero"));
+            evento.setId_grupo(res.getInt("id_grupo"));
+            evento.setNombre_barrio(res.getString("nombre_barrio"));
+            evento.setNombre_municipio(res.getString("nombre_municipio"));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return evento;
+    }
+
     public List<String> obtenerAtributosEvento() {
         return Arrays.asList("Fecha y hora", "Calle y numero", "ID del grupo organizador", "Barrio", "Municipio");
+    }
+
+    public void agregarEvento(String fecha_hora, String calle_numero, int id_grupo, int id_barrio) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "INSERT INTO evento(fecha_hora, calle_numero, id_grupo, id_barrio) " +
+                "VALUES(?,?,?,?)";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, fecha_hora);
+            sta.setString(2, calle_numero);
+            sta.setInt(3, id_grupo);
+            sta.setInt(4, id_barrio);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void borrarEvento(int id) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        try(CallableStatement sta = cnxObtenida.prepareCall("{call BorrarFilaEvento(?)}")) {
+            sta.registerOutParameter(1, id);
+            sta.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 }

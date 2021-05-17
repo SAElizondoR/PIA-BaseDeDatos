@@ -1,6 +1,7 @@
 package modelo;
 
 public class Evento {
+    private int id_evento;
     private String fecha_hora;
     private String calle_numero;
     private int id_grupo;
@@ -45,5 +46,13 @@ public class Evento {
 
     public void setNombre_municipio(String nombre_municipio) {
         this.nombre_municipio = nombre_municipio;
+    }
+
+    public int getId_evento() {
+        return id_evento;
+    }
+
+    public void setId_evento(int id_evento) {
+        this.id_evento = id_evento;
     }
 }
