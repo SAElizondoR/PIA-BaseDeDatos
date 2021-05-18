@@ -150,6 +150,10 @@
                         <input type="submit" name="accion" value="listar"/>
                     </p>
                 </form>
+                <%--@elvariable id="error" type="boolean"--%>
+                <c:if test="${error}">
+                    <h1>No se puede eliminar. Otra tabla utiliza la clave de este barrio.</h1>
+                </c:if>
                 <div class="row">
                     <div class="col">
                         <div class="table-responsive">

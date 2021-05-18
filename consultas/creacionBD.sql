@@ -1,5 +1,5 @@
 CREATE DATABASE ReyesMagos;
-GO 
+GO
 USE ReyesMagos;
 GO
 CREATE TABLE rey_mago
@@ -95,7 +95,8 @@ CREATE TABLE nino
     ON DELETE SET NULL,
     FOREIGN KEY (id_regalo) REFERENCES regalo (id_regalo)
     ON DELETE SET NULL,
-    FOREIGN KEY (id_barrio) REFERENCES barrio (id_barrio),
+    FOREIGN KEY (id_barrio) REFERENCES barrio (id_barrio)
+    ON DELETE SET NULL,
     FOREIGN KEY (id_evento) REFERENCES evento (id_evento),
     CONSTRAINT revCalleNino CHECK (calle_numero LIKE '%[0-9]')
 );

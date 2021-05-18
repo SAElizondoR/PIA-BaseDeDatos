@@ -103,6 +103,7 @@
                                 <label>
                                     <input class="form-control" type="text" style="margin: 0 0 10px;" name="nombre_barrio" placeholder="Nombre del barrio">
                                 </label>
+                                <br>
                                 <label for="municipio">Municipio</label>
                                 <select class="form-control" id="municipio" name="municipio">
                                     <%--@elvariable id="listaMunicipios" type="java.util.List"--%>

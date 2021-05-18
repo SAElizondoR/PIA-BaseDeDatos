@@ -140,6 +140,13 @@
                                     <option value="2" ${nino.id_rey_mago == 2 ? 'selected="selected"' : ''}>Gaspar</option>
                                     <option value="3" ${nino.id_rey_mago == 3 ? 'selected="selected"' : ''}>Baltazar</option>
                                 </select>
+                                <label for="id_evento">ID evento</label>
+                                <select class="form-control" id="id_evento" name="id_evento">
+                                        <%--@elvariable id="listaEventos" type="java.util.List"--%>
+                                    <c:forEach items="${listaEventos}" var="ev">
+                                        <option value="${ev.id_evento}">${ev.id_evento}</option>
+                                    </c:forEach>
+                                </select>
                                 <!--<label for="id_grupo">ID del grupo</label>-->
                                 <input type="hidden" id="calle_numero" name="calle_numero" value="${nino.calle_numero}">
                                 <input type="hidden" id="id_regalo" name="id_regalo" value="${nino.id_regalo}">

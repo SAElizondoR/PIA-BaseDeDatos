@@ -123,7 +123,7 @@ public class AccesoDatos {
         }
     }
 
-    public void borrarBarrio(int id) {
+    public boolean borrarBarrio(int id) {
         ConexionBD con = new ConexionBD();
         Connection cnxObtenida = con.crearConexion();
         String consulta = "DELETE FROM barrio " +
@@ -131,6 +131,7 @@ public class AccesoDatos {
         try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
             sta.setInt(1, id);
             sta.executeUpdate();
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -142,6 +143,7 @@ public class AccesoDatos {
                 throwables.printStackTrace();
             }
         }
+        return false;
     }
 
     public List<Municipio> listarMunicipios() {
@@ -515,18 +517,19 @@ public class AccesoDatos {
         }
     }
 
-    public void editarNino(int id_nino, String nombre, String ap_pat, String ap_mat, int id_rey_mago) {
+    public void editarNino(int id_nino, String nombre, String ap_pat, String ap_mat, int id_rey_mago, int id_evento) {
         ConexionBD con = new ConexionBD();
         Connection cnxObtenida = con.crearConexion();
         String consulta = "UPDATE nino " +
-                "SET nombre_nino = ?, apellido_paterno_nino = ?, apellido_materno_nino = ?, id_rey_mago = ? " +
+                "SET nombre_nino = ?, apellido_paterno_nino = ?, apellido_materno_nino = ?, id_rey_mago = ?, id_evento = ? " +
                 "WHERE id_nino = ?";
         try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
             sta.setString(1, nombre);
             sta.setString(2, ap_pat);
             sta.setString(3, ap_mat);
             sta.setInt(4, id_rey_mago);
-            sta.setInt(5, id_nino);
+            sta.setInt(5, id_evento);
+            sta.setInt(6, id_nino);
             sta.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -697,12 +700,13 @@ public class AccesoDatos {
 
     }
 
-    public void borrarEvento(int id) {
+    public boolean borrarEvento(int id) {
         ConexionBD con = new ConexionBD();
         Connection cnxObtenida = con.crearConexion();
         try(CallableStatement sta = cnxObtenida.prepareCall("{call BorrarFilaEvento(?)}")) {
-            sta.registerOutParameter(1, id);
+            sta.setInt(1, id);
             sta.execute();
+            return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -714,5 +718,6 @@ public class AccesoDatos {
                 throwables.printStackTrace();
             }
         }
+        return false;
     }
 }

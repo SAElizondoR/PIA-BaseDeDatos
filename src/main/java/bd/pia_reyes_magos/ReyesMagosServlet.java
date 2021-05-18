@@ -29,6 +29,7 @@ public class ReyesMagosServlet extends HttpServlet {
 
     public void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html; charset=UTF-8");
+        request.setAttribute("error", false);
         String accion = request.getParameter("accion");
         if (request.getParameter("btnagregar") != null)
             accion = "agregar";
@@ -207,7 +208,9 @@ public class ReyesMagosServlet extends HttpServlet {
                 request.setAttribute("listaGrupos", ad.listarGrupos());
                 request.setAttribute("listaBarrios", ad.listarBarrios());
                 request.setAttribute("evento", ad.obtenerEvento(Integer.parseInt(id)));
+                break;
             case "nino":
+                request.setAttribute("listaEventos", ad.listarEventos());
                 request.setAttribute("nino", ad.obtenerNino(Integer.parseInt(id)));
                 break;
             default:
@@ -246,7 +249,8 @@ public class ReyesMagosServlet extends HttpServlet {
                 String ap_pat = request.getParameter("paterno_nino");
                 String ap_mat = request.getParameter("materno_nino");
                 int id_rey = Integer.parseInt(request.getParameter("rey_mago"));
-                ad.editarNino(id_nino, nombre, ap_pat, ap_mat, id_rey);
+                int id_evento_nino = Integer.parseInt(request.getParameter("id_evento"));
+                ad.editarNino(id_nino, nombre, ap_pat, ap_mat, id_rey, id_evento_nino);
                 break;
             default:
         }
@@ -257,7 +261,9 @@ public class ReyesMagosServlet extends HttpServlet {
         switch (tabla) {
             case "barrio":
                 int id_barrio = Integer.parseInt(request.getParameter("id"));
-                ad.borrarBarrio(id_barrio);
+                if (!ad.borrarBarrio(id_barrio)) {
+                    request.setAttribute("error", true);
+                }
                 break;
             case "vecino":
                 String dni_vecino = request.getParameter("id");
@@ -265,7 +271,11 @@ public class ReyesMagosServlet extends HttpServlet {
                 break;
             case "evento":
                 int id_evento = Integer.parseInt(request.getParameter("id"));
-                ad.borrarEvento(id_evento);
+                if (!ad.borrarEvento(id_evento)) {
+                    request.setAttribute("error", true);
+                    System.out.println(request.getAttribute("error"));
+                }
+
                 break;
             case "nino":
                 int id_nino = Integer.parseInt(request.getParameter("id"));
