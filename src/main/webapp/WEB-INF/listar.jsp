@@ -203,6 +203,7 @@
                                 <c:if test="${tabla == 'evento'}">
                                     <c:forEach items="${lista}" var="elemento">
                                         <tr>
+                                            <td><c:out value="${elemento.id_evento}"/></td>
                                             <td><c:out value="${elemento.fecha_hora}"/></td>
                                             <td><c:out value="${elemento.calle_numero}"/></td>
                                             <td><c:out value="${elemento.id_grupo}"/></td>
@@ -216,7 +217,23 @@
                                         </tr>
                                     </c:forEach>
                                 </c:if>
-
+                                <c:if test="${tabla == 'nino'}">
+                                    <c:forEach items="${lista}" var="elemento">
+                                        <tr>
+                                            <td><c:out value="${elemento.nombre_completo}"/></td>
+                                            <td><c:out value="${elemento.calle_numero}"/></td>
+                                            <td><c:out value="${elemento.nombre_rey_mago}"/></td>
+                                            <td><c:out value="${elemento.nombre_regalo}"/></td>
+                                            <td><c:out value="${elemento.nombre_barrio}"/></td>
+                                            <td><c:out value="${elemento.id_evento}"/></td>
+                                            <td>
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=editar&id=${elemento.id_nino}>Editar</a>
+                                                |
+                                                <a href=${pageContext.request.contextPath}/ReyesMagosServlet?accion=eliminar&id=${elemento.id_nino}>Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
                                 </tbody>
                             </table>
                         </div>

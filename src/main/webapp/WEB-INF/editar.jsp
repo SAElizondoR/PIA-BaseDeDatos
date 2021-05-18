@@ -126,6 +126,34 @@
                                     <button class="btn btn-primary btn-block" name="accion" value="editarBDevento" type="submit" style="background: rgb(95,82,245);">Editar</button>
                                 </div>
                             </c:if>
+                            <c:if test="${tabla == 'nino'}"><%--@elvariable id="nino" type="modelo.Nino"--%>
+                                <input type="hidden" name="id" value=${nino.id_nino}>
+                                <label for="nombre_nino">Nombre(s)</label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="nombre_nino" name="nombre_nino" placeholder="${nino.nombre_nino}">
+                                <label for="paterno_nino">Apellido paterno</label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="paterno_nino" name="paterno_nino" placeholder="${nino.apellido_paterno_nino}">
+                                <label for="materno_nino">Apellido materno</label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="materno_nino" name="materno_nino" placeholder="${nino.apellido_materno_nino}">
+                                <label for="rey_mago">Rey mago al que pide</label>
+                                <select class="form-control" id="rey_mago" name="rey_mago">
+                                    <option value="1" ${nino.id_rey_mago == 1 ? 'selected="selected"' : ''}>Melchor</option>
+                                    <option value="2" ${nino.id_rey_mago == 2 ? 'selected="selected"' : ''}>Gaspar</option>
+                                    <option value="3" ${nino.id_rey_mago == 3 ? 'selected="selected"' : ''}>Baltazar</option>
+                                </select>
+                                <!--<label for="id_grupo">ID del grupo</label>-->
+                                <input type="hidden" id="calle_numero" name="calle_numero" value="${nino.calle_numero}">
+                                <input type="hidden" id="id_regalo" name="id_regalo" value="${nino.id_regalo}">
+                                <input type="hidden" id="id_barrio" name="id_barrio" value="${nino.id_barrio}">
+                                <input type="hidden" id="id_evento" name="id_evento" value="${nino.id_evento}">
+                                <!--<select disabled class="form-control" id="id_grupo" name="id_grupo">
+                                <%--@elvariable id="listaGrupos" type="java.util.List"--%>
+                                <option value="$vecino.id_grupo} selected}">$vecino.id_grupo}</option>
+                                </select>-->
+                                <br>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" name="accion" value="editarBDnino" type="submit" style="background: rgb(95,82,245);">Editar</button>
+                                </div>
+                            </c:if>
                         </form>
                     </div>
                     <div class="col" style="border-radius: 68px;">

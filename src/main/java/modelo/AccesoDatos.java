@@ -200,6 +200,34 @@ public class AccesoDatos {
         return lista;
     }
 
+    public List<Regalo> listarRegalos() {
+        List<Regalo> lista = new ArrayList<>();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT id_regalo, nombre_regalo " +
+                "FROM regalo";
+        try(Statement dec = cnxObtenida.createStatement()) {
+            ResultSet res = dec.executeQuery(consulta);
+            while (res.next()) {
+                Regalo regalo = new Regalo();
+                regalo.setId_regalo(res.getInt("id_regalo"));
+                regalo.setNombre_regalo(res.getString("nombre_regalo"));
+                lista.add(regalo);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return lista;
+    }
+
     public List<Grupo> listarGrupos() {
         List<Grupo> lista = new ArrayList<>();
         ConexionBD con = new ConexionBD();
@@ -375,6 +403,166 @@ public class AccesoDatos {
         }
     }
 
+
+
+    public List<Nino> listarNinos() {
+        List<Nino> lista = new ArrayList<>();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT * FROM nino " +
+                "INNER JOIN barrio as b on nino.id_barrio = b.id_barrio " +
+                "INNER JOIN evento as e on nino.id_evento = e.id_evento " +
+                "INNER JOIN rey_mago as rm on nino.id_rey_mago = rm.id_rey_mago " +
+                "INNER JOIN regalo as r2 on nino.id_regalo = r2.id_regalo";
+        try(Statement dec = cnxObtenida.createStatement()) {
+            ResultSet res = dec.executeQuery(consulta);
+            while (res.next()) {
+                Nino nino = new Nino();
+                nino.setId_nino(res.getInt("id_nino"));
+                nino.setNombre_nino(res.getString("nombre_nino"));
+                nino.setApellido_paterno_nino(res.getString("apellido_paterno_nino"));
+                nino.setApellido_materno_nino(res.getString("apellido_materno_nino"));
+                nino.setNombre_completo(nino.getNombre_nino() + ' ' + nino.getApellido_paterno_nino() + ' '
+                + nino.getApellido_materno_nino());
+                nino.setCalle_numero(res.getString("calle_numero"));
+                nino.setId_rey_mago(res.getInt("id_rey_mago"));
+                nino.setNombre_rey_mago(res.getString("nombre_rey_mago"));
+                nino.setId_regalo(res.getInt("id_regalo"));
+                nino.setNombre_regalo(res.getString("nombre_regalo"));
+                nino.setId_barrio(res.getInt("id_barrio"));
+                nino.setNombre_barrio(res.getString("nombre_barrio"));
+                nino.setId_evento(res.getInt("id_evento"));
+                lista.add(nino);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return lista;
+    }
+
+    public Nino obtenerNino(int id) {
+        Nino nino = new Nino();
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "SELECT * " +
+                "FROM nino " +
+                "WHERE id_nino = ?";
+        try(PreparedStatement dec = cnxObtenida.prepareStatement(consulta)) {
+            dec.setInt(1, id);
+            ResultSet res = dec.executeQuery();
+            res.next();
+            nino.setId_nino(res.getInt("id_nino"));
+            nino.setNombre_nino(res.getString("nombre_nino"));
+            nino.setApellido_paterno_nino(res.getString("apellido_paterno_nino"));
+            nino.setApellido_materno_nino(res.getString("apellido_materno_nino"));
+            nino.setCalle_numero(res.getString("calle_numero"));
+            nino.setId_rey_mago(res.getInt("id_rey_mago"));
+            nino.setId_regalo(res.getInt("id_regalo"));
+            nino.setId_barrio(res.getInt("id_barrio"));
+            nino.setId_evento(res.getInt("id_evento"));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return nino;
+    }
+
+    public List<String> obtenerAtributosNino() {
+        return Arrays.asList("Nombre", "Calle y numero", "Rey mago al que pidio", "Regalo", "Barrio", "ID evento");
+    }
+
+    public void agregarNino(String nombre, String ap_pat, String ap_mat, String calle_num, int id_rey,
+                            int id_regalo, int id_barrio, int id_evento) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "INSERT INTO nino(nombre_nino, apellido_paterno_nino, apellido_materno_nino, calle_numero, id_rey_mago, id_regalo, id_barrio, id_evento) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, nombre);
+            sta.setString(2, ap_pat);
+            sta.setString(3, ap_mat);
+            sta.setString(4, calle_num);
+            sta.setInt(5, id_rey);
+            sta.setInt(6, id_regalo);
+            sta.setInt(7, id_barrio);
+            sta.setInt(8, id_evento);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void editarNino(int id_nino, String nombre, String ap_pat, String ap_mat, int id_rey_mago) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "UPDATE nino " +
+                "SET nombre_nino = ?, apellido_paterno_nino = ?, apellido_materno_nino = ?, id_rey_mago = ? " +
+                "WHERE id_nino = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setString(1, nombre);
+            sta.setString(2, ap_pat);
+            sta.setString(3, ap_mat);
+            sta.setInt(4, id_rey_mago);
+            sta.setInt(5, id_nino);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+    }
+
+    public void borrarNino(int id) {
+        ConexionBD con = new ConexionBD();
+        Connection cnxObtenida = con.crearConexion();
+        String consulta = "DELETE FROM nino " +
+                "WHERE id_nino = ?";
+        try(PreparedStatement sta = cnxObtenida.prepareStatement(consulta)) {
+            sta.setInt(1, id);
+            sta.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                if(!cnxObtenida.isClosed())
+                    cnxObtenida.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
     public List<Evento> listarEventos() {
         List<Evento> lista = new ArrayList<>();
         ConexionBD con = new ConexionBD();
@@ -438,12 +626,12 @@ public class AccesoDatos {
     }
 
     public List<String> obtenerAtributosEvento() {
-        return Arrays.asList("Fecha y hora", "Calle y numero", "ID del grupo organizador", "Barrio", "Municipio");
+        return Arrays.asList("ID", "Fecha y hora", "Calle y numero", "ID del grupo organizador", "Barrio", "Municipio");
     }
 
     public void agregarEvento(String fecha_hora, String calle_numero, int id_grupo, int id_barrio) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-        Date fecha = null;
+        Date fecha;
         try {
             fecha = format1.parse(fecha_hora);
         } catch (ParseException e) {

@@ -181,6 +181,50 @@
                                     <button class="btn btn-primary btn-block" name="accion" value="agregarBDevento" type="submit" style="background: rgb(95,82,245);">Agregar</button>
                                 </div>
                             </c:if>
+                            <c:if test="${tabla == 'nino'}">
+                                <label>
+                                    <input class="form-control" type="text" style="margin: 0 0 10px;" name="nombre_nino" placeholder="Nombre(s)">
+                                </label>
+                                <label>
+                                    <input class="form-control" type="text" style="margin: 0 0 10px;" name="paterno_nino" placeholder="Apellido paterno">
+                                </label>
+                                <label>
+                                    <input class="form-control" type="text" style="margin: 0 0 10px;" name="materno_nino" placeholder="Apellido materno">
+                                </label>
+                                <input class="form-control" type="text" style="margin: 0 0 10px;" id="calle" name="calle" placeholder="Calle">
+                                <input class="form-control" type="number" style="margin: 0 0 10px;" id="numero" name="numero" placeholder="Número">
+                                <label for="rey_mago">Rey mago que le pide</label>
+                                <select class="form-control" id="rey_mago" name="rey_mago">
+                                    <option value="1">Melchor</option>
+                                    <option value="2">Gaspar</option>
+                                    <option value="3">Baltazar</option>
+                                </select>
+                                <label for="id_regalo">Regalo</label>
+                                <select class="form-control" id="id_regalo" name="id_regalo">
+                                        <%--@elvariable id="listaRegalos" type="java.util.List"--%>
+                                    <c:forEach items="${listaRegalos}" var="reg">
+                                        <option value="${reg.id_regalo}">${reg.nombre_regalo}</option>
+                                    </c:forEach>
+                                </select>
+                                <label for="id_barrio">Barrio</label>
+                                <select class="form-control" id="id_barrio" name="id_barrio">
+                                        <%--@elvariable id="listaBarrios" type="java.util.List"--%>
+                                    <c:forEach items="${listaBarrios}" var="bar">
+                                        <option value="${bar.id_barrio}">${bar.nombre_barrio}</option>
+                                    </c:forEach>
+                                </select>
+                                <label for="id_evento">ID evento</label>
+                                <select class="form-control" id="id_evento" name="id_evento">
+                                        <%--@elvariable id="listaEventos" type="java.util.List"--%>
+                                    <c:forEach items="${listaEventos}" var="ev">
+                                        <option value="${ev.id_evento}">${ev.id_evento}</option>
+                                    </c:forEach>
+                                </select>
+                                <br>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" name="accion" value="agregarBDnino" type="submit" style="background: rgb(95,82,245);">Agregar</button>
+                                </div>
+                            </c:if>
                         </form>
                     </div>
                     <div class="col" style="border-radius: 68px;">

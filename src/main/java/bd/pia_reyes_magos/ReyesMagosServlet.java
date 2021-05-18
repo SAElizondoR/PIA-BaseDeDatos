@@ -8,10 +8,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
-import modelo.AccesoDatos;
-import modelo.Barrio;
-import modelo.Evento;
-import modelo.Vecino;
+
+import modelo.*;
 
 @WebServlet(name = "reyesMagosServlet", value = "/reyes-magos-servlet")
 public class ReyesMagosServlet extends HttpServlet {
@@ -58,15 +56,24 @@ public class ReyesMagosServlet extends HttpServlet {
                 tabla = "evento";
                 agregarAlgo(request, response);
                 break;
+            case "agregarBDnino":
+                tabla = "nino";
+                agregarAlgo(request, response);
+                break;
             case "editarBDbarrio":
                 tabla = "barrio";
                 editarAlgo(request, response);
+                break;
             case "editarBDvecino":
                 tabla = "vecino";
                 editarAlgo(request, response);
                 break;
             case "editarBDevento":
                 tabla = "evento";
+                editarAlgo(request, response);
+                break;
+            case "editarBDnino":
+                tabla = "nino";
                 editarAlgo(request, response);
                 break;
             default:
@@ -78,7 +85,7 @@ public class ReyesMagosServlet extends HttpServlet {
     }
 
     public void mostrarTabla(HttpServletRequest request, HttpServletResponse response) {
-        List<String> atributos = null;
+        List<String> atributos;
         switch (tabla) {
             case "barrio":
                 List<Barrio> listaBarrios = ad.listarBarrios();
@@ -97,6 +104,9 @@ public class ReyesMagosServlet extends HttpServlet {
                 request.setAttribute("lista", listaEventos);
                 break;
             case "nino":
+                List<Nino> listaNinos = ad.listarNinos();
+                atributos = ad.obtenerAtributosNino();
+                request.setAttribute("lista", listaNinos);
                 break;
             default:
                 atributos = Collections.singletonList("Nada por mostrar");
@@ -128,6 +138,10 @@ public class ReyesMagosServlet extends HttpServlet {
                 request.setAttribute("listaGrupos", ad.listarGrupos());
                 request.setAttribute("listaBarrios", ad.listarBarrios());
                 break;
+            case "nino":
+                request.setAttribute("listaRegalos", ad.listarRegalos());
+                request.setAttribute("listaBarrios", ad.listarBarrios());
+                request.setAttribute("listaEventos", ad.listarEventos());
             default:
         }
         request.setAttribute("tabla", tabla);
@@ -163,6 +177,15 @@ public class ReyesMagosServlet extends HttpServlet {
                 ad.agregarEvento(fecha_hora, calle_numero, id_grupo_ev, id_barrio_ev);
                 break;
             case "nino":
+                String nombre = request.getParameter("nombre_nino");
+                String ap_pat = request.getParameter("paterno_nino");
+                String ap_mat = request.getParameter("materno_nino");
+                String calle_num = request.getParameter("calle") + ' ' + request.getParameter("numero");
+                int id_rey_mago_nino = Integer.parseInt(request.getParameter("rey_mago"));
+                int id_regalo = Integer.parseInt(request.getParameter("id_regalo"));
+                int id_barrio = Integer.parseInt(request.getParameter("id_barrio"));
+                int id_evento = Integer.parseInt(request.getParameter("id_evento"));
+                ad.agregarNino(nombre, ap_pat, ap_mat, calle_num, id_rey_mago_nino, id_regalo, id_barrio, id_evento);
                 break;
             default:
         }
@@ -184,6 +207,9 @@ public class ReyesMagosServlet extends HttpServlet {
                 request.setAttribute("listaGrupos", ad.listarGrupos());
                 request.setAttribute("listaBarrios", ad.listarBarrios());
                 request.setAttribute("evento", ad.obtenerEvento(Integer.parseInt(id)));
+            case "nino":
+                request.setAttribute("nino", ad.obtenerNino(Integer.parseInt(id)));
+                break;
             default:
         }
         RequestDispatcher desp = request.getRequestDispatcher("/WEB-INF/editar.jsp");
@@ -215,6 +241,12 @@ public class ReyesMagosServlet extends HttpServlet {
                 ad.editarEvento(id_evento, fecha_hora);
                 break;
             case "nino":
+                int id_nino = Integer.parseInt(request.getParameter("id"));
+                String nombre = request.getParameter("nombre_nino");
+                String ap_pat = request.getParameter("paterno_nino");
+                String ap_mat = request.getParameter("materno_nino");
+                int id_rey = Integer.parseInt(request.getParameter("rey_mago"));
+                ad.editarNino(id_nino, nombre, ap_pat, ap_mat, id_rey);
                 break;
             default:
         }
@@ -224,14 +256,20 @@ public class ReyesMagosServlet extends HttpServlet {
     public void borrarAlgo(HttpServletRequest request, HttpServletResponse response) {
         switch (tabla) {
             case "barrio":
+                int id_barrio = Integer.parseInt(request.getParameter("id"));
+                ad.borrarBarrio(id_barrio);
                 break;
             case "vecino":
-                String dni_vecino = request.getParameter("dni_vecino");
+                String dni_vecino = request.getParameter("id");
                 ad.borrarVecino(dni_vecino);
                 break;
             case "evento":
+                int id_evento = Integer.parseInt(request.getParameter("id"));
+                ad.borrarEvento(id_evento);
                 break;
             case "nino":
+                int id_nino = Integer.parseInt(request.getParameter("id"));
+                ad.borrarNino(id_nino);
                 break;
             default:
         }
